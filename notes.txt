@@ -1,0 +1,111 @@
+//TODO PARSE STRING DELIMINATER (':')
+
+Setup the Laravel
+	-Install PHP
+	-Install Composer
+
+Create the first Laravel app
+	-php artisan new <app_name>
+
+Serve with Local Host
+	-php -S localhost:8888 -t public
+
+Get Familiar with
+	-route
+	-controller
+	-view
+	-blade templating
+
+Setting up Route with Controller
+	-Route::get ('path','ControllerName@function');
+
+Passing data from Controller to View
+	-return view('view_name');
+	-using with->
+	-passing $data as second argument
+	-using php compact() as second argument
+
+Create the controller
+	-php artisan make:controller <ControllerName>
+
+Database Migration and Seed
+//See databaseNote.txt
+
+Illuminate
+	composer require illuminate/html
+	github.com/illuminate/html
+	go to config/app.php and add new
+		Illuminate
+		Facade
+
+Collective for Laravel 5.1
+http://laravelcollective.com/docs/5.1/html
+	For Laravel 5.1 I got it to work by
+
+	in composer.json add to the require:
+	"laravelcollective/html": "~5.1"
+
+	running "composer " and updatethen "composer dump-autoload" on terminal
+
+	in app.php providers:
+	Collective\Html\HtmlServiceProvider::class,
+
+	and in the aliases :
+	'Form' => Collective\Html\FormFacade::class,
+	'Html' => Collective\Html\HtmlFacade::class,
+
+/////////////////////////////////////////////////////////////////////////////////////
+
+Carbon\Carbon
+	# set timezone in config/app.php
+	# convert new timestamp into Carbon instance
+		- in Model 
+		- protected $dates = ['published_at'];
+	# ->diffForHumans()
+
+Scope
+	# ->published() in Controller
+	# public function scopePublished($query) in Model
+
+
+//////////////////////////////////////////////////////////////////////////////////////
+
+Validation
+
+Form Request
+	# php artisan make:request CreateArticleRequest
+	# app/Http/Request
+
+User general Request
+	# call on validation function
+
+Display Error Message in view
+	# $errors
+
+////////////////////////////////////////////////////////
+
+php artisan route:list
+	-list all the route for our apps
+
+///////////////////////////////////////////////////
+
+Resource
+	# In Route
+		-Route::resource('articles','ArticlesController');
+
+Bind Eloquent Model to Form
+		{!! Form::model($article, ['method'=>'PATCH', 'action'=>['ArticlesController@update',$article->id]]) !!}
+
+Form Partials
+	@include('path._form',['key'=>'value'])
+
+//////////////////////////////////////////////////////
+Middleware put at the beginning of the Model
+	- constructor
+
+Create our own middleware
+	# php artisan make:middleware <name>
+	# go to the created Middleware class
+		- refer Route for cool stuff
+	# add in RouteMiddleware in Kernel.php
+	# attached the middleware in any of the Controller constructor

@@ -1,0 +1,136 @@
+1. create a new project using Composer (work with WAMP)
+	composer create-project <project_name>
+2. copy the file into www uWAMP
+3. Try localhost/<Project_Name>/public
+
+////////////////////////////////////////////////////
+MIGRATION
+
+CREATE NEW TABLE
+	php artisan make:migration create_projects_and_tasks_tables --create="projects"
+
+ADD NEW COLUMN TO TABLE USING MIGRATION
+	php artisan make:migration add_excerpt_to_articles_table --table="articles"
+
+PERFORM THE MIGRATION
+	php artisan migrate
+	php artisan migrate:refresh
+
+ROLLBACK (UNDO THE MIGRATION)
+	php artisan migrate:rollback	
+
+
+/////////////////////////////////////////////////////
+
+DB_HOST=mysql.cs.iastate.edu
+DB_DATABASE=db319grp35
+DB_USERNAME=dbu319grp35
+
+*---------------------*
+DB_PASSWORD = tD7bBjwKF
+*---------------------*
+
+LOGIN INTO MYSQL SERVER
+mysql -u dbu319grp35 -p -h mysql.cs.iastate.edu
+
+SOME USEFULL MYSQL COMMAND LINES
+	use db319grp35;
+	show tables;
+	describe <table_name>;
+	SELECT * FROM <table_name>;
+
+
+	SET FOREIGN_KEY_CHECKS=0;
+	DROP TABLE IF EXIST <table_name>;
+	SET FOREIGN_KEY_CHECKS=1;
+/////////////////////////////////////////////////////
+
+SEED THE TABLE
+	1. create <table_name>TableSeeder.php in database/seeds
+
+	php artisan make:seeder <table_name>TableSeeder
+
+	2. add new line in DatabaseSeeder.php after Model::unguard()
+		$this->call('<table_name>TableSeeder');
+
+	3. run those command line in terminal
+		composer dump-autoload
+		php artisan db:seed
+
+////////////////////////////////////////////////////
+
+CREATE A MODEL FOR THE TABLE THAT WE CREATED
+
+php artisan make:model <Model_Name>
+	php artisan make:model Project
+	php artisan make:model Task
+
+Model will be created in app/Providers
+
+
+////////////////////////////////////////////////////
+
+ARTISAN - TINKER
+
+$ php artisan tinker
+	>App\Project::count();    
+	3
+	>App\Task::count();
+	7
+
+PLAYING WITH MODEL USING TINKER
+	$article = new App\<ModelName>
+	
+	INSERT TO
+		$article = new App\Articles
+		$article->title = "My Title";
+		&article->published_at = Carbon\Carbon::now()
+		$article->toArray()
+		$article->save();
+
+	INSERT USING MASS ASSIGNMENT
+		$article = App\Articles::create(['title'=>'New Article2','body'=>'hikhok', 'published_at'=>Carbon\Carbon::now()])
+
+	FIND ENTRY WITH GIVEN ID
+		$article = App\Articles::find(1)
+
+	SELECT * FROM
+		$article = App\Article::all()->toArray()
+
+	SELECT * FROM WHERE
+		$article = App\Article::where('body','Loren ipsum')->get()
+		- we get a Collection as returned object
+
+	UPDATE 1
+		find(id)
+			$article = App\Articles::find(2)
+		assigned mannualy
+			$article->body = "update"
+		save()
+			$article->save()
+
+	UPDATE 2
+		find(id)
+			$article = App\Articles::find(2)
+		update()
+			$article->update(['title'=>'New Article3','body'=>'hikhok', 'published_at'=>Carbon\Carbon::now()])
+
+///////////////////////////////////////////////////////
+
+ELOQUENT RELATIONSHIP
+	assume article belongsTo user
+	# $user->articles 
+	# $user->articles()->get() 
+		will return all articles that belong to the user
+	# this is possible because we have the method articles in User model(eloquent)
+
+	#OR kalau nk tambah WHERE bagai
+	# use it as method
+	# $user->articles()->where('title','=','title_name')->get()
+
+/////////////////////////////////////////////////////
+ELOQUENT MODEL
+	php artisan make:model <ModelName>
+	php artisan make:model Articles
+
+
